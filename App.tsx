@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 // ─── DATA ─────────────────────────────────────────────────────────────────────
@@ -72,86 +72,46 @@ const PRICING_TIERS = [
 const SYSTEM_CAPABILITIES = [
   {
     group: 'Intake & Capture',
-    items: [
-      'Invoice ingestion (email, upload, routing)',
-      'OCR + structured data extraction',
-      'Centralized storage',
-    ],
+    items: ['Invoice ingestion (email, upload, routing)', 'OCR + structured data extraction', 'Centralized storage'],
   },
   {
     group: 'Validation & Controls',
-    items: [
-      'Vendor verification',
-      'Duplicate detection',
-      'Approval routing logic',
-    ],
+    items: ['Vendor verification', 'Duplicate detection', 'Approval routing logic'],
   },
   {
     group: 'Payment & Execution',
-    items: [
-      'Payment scheduling',
-      'Controlled authorization flows',
-      'Audit-safe processing',
-    ],
+    items: ['Payment scheduling', 'Controlled authorization flows', 'Audit-safe processing'],
   },
   {
     group: 'Monitoring & Risk',
-    items: [
-      'Anomaly detection',
-      'Fraud flags',
-      'Exception handling',
-    ],
+    items: ['Anomaly detection', 'Fraud flags', 'Exception handling'],
   },
   {
     group: 'Reporting & Visibility',
-    items: [
-      'Workflow reporting',
-      'Bottleneck identification',
-      'Ongoing system review',
-    ],
+    items: ['Workflow reporting', 'Bottleneck identification', 'Ongoing system review'],
   },
 ];
 
 const ADDITIONAL_CAPABILITIES = [
   {
     name: 'Automation & Integrations',
-    items: [
-      'Connecting tools across your stack',
-      'Eliminating manual handoffs',
-      'Building reliable workflows',
-    ],
+    items: ['Connecting tools across your stack', 'Eliminating manual handoffs', 'Building reliable workflows'],
   },
   {
     name: 'AI Implementation',
-    items: [
-      'AI-assisted data extraction',
-      'Workflow augmentation (not automation chaos)',
-      'Practical AI use inside real operations',
-    ],
+    items: ['AI-assisted data extraction', 'Workflow augmentation (not automation chaos)', 'Practical AI use inside real operations'],
   },
   {
     name: 'Reporting & Financial Visibility',
-    items: [
-      'Cash flow clarity',
-      'Workflow reporting',
-      'Bottleneck identification',
-    ],
+    items: ['Cash flow clarity', 'Workflow reporting', 'Bottleneck identification'],
   },
   {
     name: 'Industry-Specific Systems',
-    items: [
-      'Legal workflows',
-      'Trades / field operations',
-      'Custom intake + routing systems',
-    ],
+    items: ['Legal workflows', 'Trades / field operations', 'Custom intake + routing systems'],
   },
   {
     name: 'Cleanup & Recovery',
-    items: [
-      'Fixing broken workflows',
-      'Untangling messy systems',
-      'Rebuilding from real-world usage',
-    ],
+    items: ['Fixing broken workflows', 'Untangling messy systems', 'Rebuilding from real-world usage'],
   },
 ];
 
@@ -186,14 +146,107 @@ const DIGITAL_PRODUCTS = [
     name: 'The Full Operator Stack',
     tagline: 'Understand it. Then build it.',
     price: '$599',
-    anchor: 'Bundle of both products',
+    anchor: 'Bundle of both',
     badge: 'Best value',
     note: null,
-    features: ['Operator Bundle included', 'Build & Deploy a Live App included', 'Best value if you want both theory and execution'],
+    features: ['Operator Bundle included', 'Build & Deploy a Live App included', 'Best value if you want both'],
     deliverable: 'Everything in both product offers.',
     forWho: 'Buyers who want both the system model and the live build path.',
     cta: 'Get everything',
     highlight: true,
+  },
+];
+
+const SERVICES_LIST = [
+  {
+    name: 'AI Audit',
+    tagline: "Find what's actually breaking in your workflow.",
+    price: '$500',
+    note: 'Credited toward implementation',
+    features: ['Map your current process', 'Identify errors and bottlenecks', 'Get a clear system plan'],
+    deliverable: 'Workflow review, failure-point diagnosis, recommended fixes, and priority next steps.',
+    result: 'A clear system plan and a first-fix roadmap.',
+    cta: 'Find the break',
+  },
+  {
+    name: 'Cash Flow Clarity',
+    tagline: 'See what cash is coming in, going out, and where the gaps are.',
+    price: 'From $750/mo',
+    note: 'Not a report. A working decision system.',
+    features: ['13-week or 90-day cash forecast', 'Weekly review cadence', 'Inflow, outflow, and runway visibility'],
+    deliverable: 'Rolling forecast, weekly review rhythm, inflow/outflow visibility, and runway view.',
+    result: 'A practical plan for the next 30, 60, or 90 days and clearer next decisions.',
+    cta: 'See my cash flow',
+  },
+  {
+    name: 'Onshore AP',
+    tagline: 'Dallas-based accounts payable with control, visibility, and human review.',
+    price: 'From $1,500/mo',
+    note: 'No offshore processing. No auto-approvals.',
+    features: ['Invoice intake and validation', 'Human approval workflows', 'Full audit trail'],
+    deliverable: 'Invoice intake, validation, routing, approval coordination, and audit trail management.',
+    result: 'A controlled AP process with visibility, cleaner approvals, and stronger oversight.',
+    cta: 'Explore AP workflow',
+  },
+  {
+    name: 'Automation Setup',
+    tagline: 'Turn a broken process into a working system.',
+    price: '$1,500-$3,500',
+    note: null,
+    features: ['Client, vendor, or employee onboarding', 'Intake to approval routing', 'Built on your existing tools'],
+    deliverable: 'Forms, routing logic, approvals, notifications, and reporting tied to your current stack.',
+    result: 'A working system that reduces manual work and standardizes delivery.',
+    cta: 'Build my system',
+  },
+  {
+    name: 'AI Use Policy',
+    tagline: 'Set clear rules for how your business uses AI.',
+    price: '$500',
+    note: null,
+    features: ['Define where AI is allowed', 'Set approval and control rules', 'Simple internal policy'],
+    deliverable: 'Allowed-use guidance, review points, and lightweight policy language.',
+    result: 'A usable internal AI policy rather than a bloated compliance document.',
+    cta: 'Set AI rules',
+  },
+  {
+    name: 'Automated Reporting',
+    tagline: 'Stop building the same reports by hand every week.',
+    price: '$500-$1,500',
+    note: null,
+    features: ['Real-time dashboards', 'Scheduled reports', 'Clear operational insights'],
+    deliverable: 'Dashboard setup, scheduled report flows, and exception/ops reporting.',
+    result: 'Consistent reporting with less manual work and better visibility.',
+    cta: 'Automate reporting',
+  },
+  {
+    name: 'Compliance + Training',
+    tagline: "Train your team on workflows that don't break under pressure.",
+    price: '$750-$2,000',
+    note: null,
+    features: ['Fraud prevention workflows', 'Approval and verification training', 'Real-world scenarios'],
+    deliverable: 'Workflow-specific training, fraud-prevention scenarios, and control guidance.',
+    result: 'Fewer mistakes, tighter controls, and more consistent execution.',
+    cta: 'Strengthen my controls',
+  },
+  {
+    name: 'AI Bootcamps',
+    tagline: 'Learn how to actually use AI in your business without breaking things.',
+    price: '$300 / $750 (1:1)',
+    note: null,
+    features: ['Real business use cases', 'Workflow-first training, not tool demos', 'Safe AI usage and boundaries'],
+    deliverable: 'Live training, workflow examples, use-case guidance, and boundary-setting.',
+    result: 'A safer, more useful AI workflow for your team or practice.',
+    cta: 'Book a session',
+  },
+  {
+    name: 'Invoice Delta',
+    tagline: 'Find pricing inconsistencies and cost leakage across vendor invoices.',
+    price: 'Custom',
+    note: null,
+    features: ['Vendor pricing comparison', 'Invoice pattern analysis', 'Cost optimization'],
+    deliverable: 'Price comparison review, pattern analysis, and leakage/opportunity findings.',
+    result: 'Clear visibility into pricing drift and where costs can be reduced.',
+    cta: 'Learn more',
   },
 ];
 
@@ -209,53 +262,70 @@ const PRINCIPLES = [
   { rule: 'Conflict', action: 'ESCALATE', copy: 'Conflicting records go to the right person.' },
 ];
 
-// ─── HUMAN TYPING HOOK ────────────────────────────────────────────────────────
+// ─── TYPING HOOK (freeze-proof) ───────────────────────────────────────────────
+// Uses a single incrementing generation counter so any orphaned
+// setTimeout from a previous render cycle simply no-ops on fire.
 
-function useHumanTyping(phrases: string[]) {
+function useHumanTyping(phrases: readonly string[]) {
   const [displayed, setDisplayed] = useState('');
-  const stateRef = useRef({ phraseIdx: 0, charIdx: 0, phase: 'typing' as 'typing' | 'pausing' | 'deleting' });
-  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const genRef = useRef(0);
+  const phraseIdxRef = useRef(0);
+  const charIdxRef = useRef(0);
+  const phaseRef = useRef<'typing' | 'pausing' | 'deleting'>('typing');
 
   useEffect(() => {
+    const myGen = ++genRef.current;
+
     const tick = () => {
-      const s = stateRef.current;
-      const target = phrases[s.phraseIdx];
-      if (s.phase === 'typing') {
-        if (s.charIdx < target.length) {
-          const ch = target[s.charIdx];
+      if (genRef.current !== myGen) return; // stale closure - bail out
+
+      const phraseIdx = phraseIdxRef.current;
+      const charIdx = charIdxRef.current;
+      const phase = phaseRef.current;
+      const target = phrases[phraseIdx];
+
+      if (phase === 'typing') {
+        if (charIdx < target.length) {
+          const ch = target[charIdx];
           const isSpace = ch === ' ';
-          const afterPunct = s.charIdx > 0 && ',.!?'.includes(target[s.charIdx - 1]);
+          const afterPunct = charIdx > 0 && ',.!?'.includes(target[charIdx - 1]);
           let speed = 55 + Math.random() * 65;
           if (isSpace) speed = 80 + Math.random() * 50;
-          if (afterPunct) speed += 120 + Math.random() * 100;
-          if (s.charIdx < 3) speed += 60;
-          if (s.charIdx > 10 && Math.random() < 0.04) speed += 250 + Math.random() * 350;
-          s.charIdx++;
-          setDisplayed(target.slice(0, s.charIdx));
-          timerRef.current = setTimeout(tick, speed);
+          if (afterPunct) speed += 100 + Math.random() * 80;
+          if (charIdx < 3) speed += 50;
+          if (charIdx > 10 && Math.random() < 0.04) speed += 220 + Math.random() * 280;
+          charIdxRef.current = charIdx + 1;
+          setDisplayed(target.slice(0, charIdx + 1));
+          setTimeout(tick, speed);
         } else {
-          s.phase = 'pausing';
-          timerRef.current = setTimeout(tick, 1600 + Math.random() * 700);
+          phaseRef.current = 'pausing';
+          setTimeout(tick, 1400 + Math.random() * 600);
         }
-      } else if (s.phase === 'pausing') {
-        s.phase = 'deleting';
-        timerRef.current = setTimeout(tick, 60);
+      } else if (phase === 'pausing') {
+        phaseRef.current = 'deleting';
+        setTimeout(tick, 50);
       } else {
-        if (s.charIdx > 0) {
-          const chunk = s.charIdx > 6 && Math.random() < 0.12 ? 2 : 1;
-          s.charIdx = Math.max(0, s.charIdx - chunk);
-          setDisplayed(phrases[s.phraseIdx].slice(0, s.charIdx));
-          timerRef.current = setTimeout(tick, 22 + Math.random() * 18);
+        // deleting
+        if (charIdx > 0) {
+          const chunk = charIdx > 8 && Math.random() < 0.1 ? 2 : 1;
+          const next = Math.max(0, charIdx - chunk);
+          charIdxRef.current = next;
+          setDisplayed(target.slice(0, next));
+          setTimeout(tick, 18 + Math.random() * 16);
         } else {
-          s.phraseIdx = (s.phraseIdx + 1) % phrases.length;
-          s.charIdx = 0;
-          s.phase = 'typing';
-          timerRef.current = setTimeout(tick, 280 + Math.random() * 180);
+          phraseIdxRef.current = (phraseIdx + 1) % phrases.length;
+          charIdxRef.current = 0;
+          phaseRef.current = 'typing';
+          setTimeout(tick, 260 + Math.random() * 160);
         }
       }
     };
-    timerRef.current = setTimeout(tick, 800);
-    return () => { if (timerRef.current) clearTimeout(timerRef.current); };
+
+    const t = setTimeout(tick, 600);
+    return () => {
+      genRef.current++; // invalidate this generation
+      clearTimeout(t);
+    };
   }, [phrases]);
 
   return displayed;
@@ -263,13 +333,15 @@ function useHumanTyping(phrases: string[]) {
 
 // ─── SHARED ───────────────────────────────────────────────────────────────────
 
-const SectionReveal: React.FC<{ children: React.ReactNode; className?: string; id?: string }> = ({ children, className = '', id }) => (
+const SectionReveal: React.FC<{ children: React.ReactNode; className?: string; id?: string }> = ({
+  children, className = '', id,
+}) => (
   <motion.section
     id={id}
-    initial={{ opacity: 0, y: 28 }}
+    initial={{ opacity: 0, y: 24 }}
     whileInView={{ opacity: 1, y: 0 }}
-    viewport={{ once: true, margin: '-14%' }}
-    transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+    viewport={{ once: true, margin: '-12%' }}
+    transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
     className={className}
   >
     {children}
@@ -280,6 +352,12 @@ const Eyebrow: React.FC<{ children: React.ReactNode }> = ({ children }) => (
   <p className="mb-4 text-xs font-semibold uppercase tracking-[0.18em] text-cyan-300/70">{children}</p>
 );
 
+const Check: React.FC = () => (
+  <svg className="mt-0.5 h-3.5 w-3.5 shrink-0 text-cyan-400" fill="none" viewBox="0 0 16 16" stroke="currentColor" strokeWidth={2.5}>
+    <path d="M3 8l3.5 3.5L13 5" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+);
+
 // ─── NAV ──────────────────────────────────────────────────────────────────────
 
 const Nav: React.FC = () => {
@@ -287,43 +365,44 @@ const Nav: React.FC = () => {
   const links = ['services', 'process', 'pricing', 'products', 'contact'];
 
   return (
-    <nav className="fixed left-0 right-0 top-0 z-50 border-b border-white/[0.08] bg-[#0c0c0f]/80 px-5 py-4 backdrop-blur-xl">
+    <nav className="fixed left-0 right-0 top-0 z-50 border-b border-white/[0.08] bg-[#0c0c0f]/85 px-5 py-4 backdrop-blur-xl">
       <div className="mx-auto flex max-w-7xl items-center gap-4">
+        {/* Hamburger left, mobile only */}
         <button
           onClick={() => setOpen(o => !o)}
           aria-label="Toggle menu"
-          className="flex h-8 w-8 flex-col items-center justify-center gap-[5px] rounded focus:outline-none focus:ring-2 focus:ring-cyan-300/40 md:hidden"
+          className="flex h-8 w-8 flex-col items-center justify-center gap-[5px] rounded md:hidden"
         >
           <span className={`block h-px w-5 bg-neutral-300 transition-all duration-200 origin-center ${open ? 'translate-y-[7px] rotate-45' : ''}`} />
           <span className={`block h-px w-5 bg-neutral-300 transition-opacity duration-200 ${open ? 'opacity-0' : ''}`} />
           <span className={`block h-px w-5 bg-neutral-300 transition-all duration-200 origin-center ${open ? '-translate-y-[7px] -rotate-45' : ''}`} />
         </button>
+
         <a href="#hero" className="flex items-center gap-2.5 text-sm font-semibold text-white">
-          <span className="grid h-8 w-8 place-items-center rounded-md border border-cyan-300/30 bg-cyan-300/10 shadow-[0_0_24px_rgba(34,211,238,0.15)]">
+          <span className="grid h-8 w-8 place-items-center rounded-md border border-cyan-300/30 bg-cyan-300/10 shadow-[0_0_22px_rgba(34,211,238,0.14)]">
             <span className="h-2 w-2 rounded-full bg-cyan-300" />
           </span>
           Blue Dot Technology
         </a>
+
         <div className="ml-auto hidden items-center gap-7 text-sm text-neutral-400 md:flex">
-          {links.map(l => <a key={l} className="capitalize transition hover:text-white" href={`#${l}`}>{l}</a>)}
+          {links.map(l => (
+            <a key={l} className="capitalize transition hover:text-white" href={`#${l}`}>{l}</a>
+          ))}
         </div>
       </div>
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }}
-            transition={{ duration: 0.15 }}
-            className="mt-3 flex flex-col gap-1 border-t border-white/[0.08] pt-3 md:hidden"
-          >
-            {links.map(l => (
-              <a key={l} href={`#${l}`} onClick={() => setOpen(false)}
-                className="rounded-md px-3 py-2 text-sm capitalize text-neutral-300 transition hover:bg-white/[0.05] hover:text-white">
-                {l}
-              </a>
-            ))}
-          </motion.div>
-        )}
-      </AnimatePresence>
+
+      {/* Mobile dropdown - no AnimatePresence to avoid re-render cascade */}
+      {open && (
+        <div className="mt-3 flex flex-col gap-1 border-t border-white/[0.08] pt-3 md:hidden">
+          {links.map(l => (
+            <a key={l} href={`#${l}`} onClick={() => setOpen(false)}
+              className="rounded-md px-3 py-2 text-sm capitalize text-neutral-300 transition hover:bg-white/[0.05] hover:text-white">
+              {l}
+            </a>
+          ))}
+        </div>
+      )}
     </nav>
   );
 };
@@ -332,34 +411,141 @@ const Nav: React.FC = () => {
 
 const HeroSearch: React.FC = () => {
   const typed = useHumanTyping(SEARCH_PHRASES);
+
   return (
     <div className="w-full max-w-3xl">
       <motion.div
-        initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.65, delay: 0.1 }}
-        className="rounded-xl border border-white/[0.1] bg-[#111115] shadow-xl shadow-black/50"
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.1 }}
+        className="rounded-xl border border-white/[0.09] bg-[#111115] shadow-2xl shadow-black/60"
       >
         <div className="flex min-h-[66px] items-center gap-3.5 px-5">
           <svg aria-hidden="true" className="h-4 w-4 shrink-0 text-neutral-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <circle cx="11" cy="11" r="8" /><path d="m21 21-4.35-4.35" strokeLinecap="round" strokeLinejoin="round" />
+            <circle cx="11" cy="11" r="8" />
+            <path d="m21 21-4.35-4.35" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
-          <input readOnly value={typed} aria-label="Animated business search"
-            className="min-w-0 flex-1 bg-transparent text-lg text-white/90 outline-none sm:text-xl" />
-          <span aria-hidden="true" className="h-5 w-px shrink-0 bg-cyan-300/70"
-            style={{ animation: 'blink 1s step-start infinite' }} />
+          <span className="min-w-0 flex-1 text-lg text-white/90 sm:text-xl" aria-live="polite">
+            {typed}
+          </span>
+          <span
+            aria-hidden="true"
+            className="h-5 w-px shrink-0 bg-cyan-300/75"
+            style={{ animation: 'cur 1s step-start infinite' }}
+          />
         </div>
-        <style>{`@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}`}</style>
       </motion.div>
+      <style>{`@keyframes cur{0%,100%{opacity:1}50%{opacity:0}}`}</style>
     </div>
   );
 };
 
-// ─── PRICING SECTION ──────────────────────────────────────────────────────────
+// ─── ACCORDION SERVICE CARD ───────────────────────────────────────────────────
+// Uses CSS max-height transition instead of framer-motion to avoid
+// triggering parent re-renders that corrupt the typing hook.
+
+const ServiceCard: React.FC<{
+  service: typeof SERVICES_LIST[0];
+  index: number;
+  expanded: boolean;
+  onToggle: () => void;
+}> = ({ service, index, expanded, onToggle }) => (
+  <motion.div
+    initial={{ opacity: 0, y: 16 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ once: true }}
+    transition={{ duration: 0.4, delay: index * 0.04 }}
+    className={`rounded-xl border transition-colors duration-200 ${
+      expanded
+        ? 'border-cyan-300/25 bg-cyan-300/[0.035]'
+        : 'border-white/[0.08] bg-white/[0.02] hover:border-white/[0.13]'
+    }`}
+  >
+    <button onClick={onToggle} className="w-full p-6 text-left">
+      <div className="flex items-start justify-between gap-3">
+        <div className="flex-1 min-w-0">
+          <p className="text-base font-semibold text-white">{service.name}</p>
+          <p className="mt-1 text-sm leading-6 text-neutral-400">{service.tagline}</p>
+        </div>
+        <div className="flex flex-col items-end gap-2 shrink-0">
+          <span className="text-sm font-semibold text-cyan-200 whitespace-nowrap">{service.price}</span>
+          <svg
+            className={`h-4 w-4 text-neutral-500 transition-transform duration-200 ${expanded ? 'rotate-180' : ''}`}
+            fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
+          >
+            <path d="m6 9 6 6 6-6" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </div>
+      </div>
+    </button>
+
+    <div
+      className="overflow-hidden transition-all duration-300 ease-out"
+      style={{ maxHeight: expanded ? '600px' : '0px', opacity: expanded ? 1 : 0 }}
+    >
+      <div className="px-6 pb-6 border-t border-white/[0.07] pt-5 space-y-4">
+        {service.note && (
+          <p className="text-xs font-medium text-cyan-300/70">{service.note}</p>
+        )}
+        <ul className="space-y-2">
+          {service.features.map(f => (
+            <li key={f} className="flex items-start gap-2 text-sm text-neutral-300">
+              <Check />{f}
+            </li>
+          ))}
+        </ul>
+        <div className="rounded-lg border border-white/[0.06] bg-[#0c0c0f]/60 px-4 py-3">
+          <p className="text-xs text-neutral-600 mb-1">You get</p>
+          <p className="text-sm leading-6 text-neutral-300">{service.deliverable}</p>
+        </div>
+        <div className="rounded-lg border border-white/[0.06] bg-[#0c0c0f]/60 px-4 py-3">
+          <p className="text-xs text-neutral-600 mb-1">The result</p>
+          <p className="text-sm leading-6 text-neutral-300">{service.result}</p>
+        </div>
+        <a href="#contact"
+          className="inline-flex items-center rounded-lg bg-cyan-200 px-4 py-2.5 text-sm font-semibold text-[#071014] transition hover:bg-white">
+          {service.cta} &rarr;
+        </a>
+      </div>
+    </div>
+  </motion.div>
+);
+
+// ─── SECTIONS ─────────────────────────────────────────────────────────────────
+
+const ServicesSection: React.FC = () => {
+  const [expanded, setExpanded] = useState<string | null>(null);
+  const toggle = useCallback((name: string) => {
+    setExpanded(prev => prev === name ? null : name);
+  }, []);
+
+  return (
+    <SectionReveal id="services" className="px-5 py-32 sm:py-44">
+      <div className="mx-auto max-w-7xl">
+        <div className="max-w-3xl mb-16">
+          <Eyebrow>Services</Eyebrow>
+          <h2 className="text-4xl font-semibold leading-tight text-white sm:text-5xl">Make the work visible.</h2>
+          <p className="mt-5 text-sm leading-7 text-neutral-400">Every service starts with the actual problem, not the assumed one.</p>
+        </div>
+        <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+          {SERVICES_LIST.map((service, i) => (
+            <ServiceCard
+              key={service.name}
+              service={service}
+              index={i}
+              expanded={expanded === service.name}
+              onToggle={() => toggle(service.name)}
+            />
+          ))}
+        </div>
+      </div>
+    </SectionReveal>
+  );
+};
 
 const PricingSection: React.FC = () => (
   <SectionReveal id="pricing" className="px-5 py-32 sm:py-44 border-t border-white/[0.05]">
     <div className="mx-auto max-w-7xl">
-
-      {/* Header */}
       <div className="max-w-2xl mb-16">
         <Eyebrow>Pricing</Eyebrow>
         <h2 className="text-4xl font-semibold leading-tight text-white sm:text-5xl">
@@ -372,13 +558,13 @@ const PricingSection: React.FC = () => (
         {PRICING_TIERS.map((tier, i) => (
           <motion.div
             key={tier.size}
-            initial={{ opacity: 0, y: 24 }}
+            initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: i * 0.1 }}
+            transition={{ duration: 0.45, delay: i * 0.1 }}
             className={`relative flex flex-col rounded-xl border p-8 ${
               tier.highlight
-                ? 'border-cyan-300/35 bg-cyan-300/[0.05] shadow-xl shadow-cyan-500/[0.08]'
+                ? 'border-cyan-300/35 bg-cyan-300/[0.05] shadow-xl shadow-cyan-500/[0.07]'
                 : 'border-white/[0.08] bg-white/[0.02]'
             }`}
           >
@@ -390,10 +576,7 @@ const PricingSection: React.FC = () => (
               </div>
             )}
 
-            {/* Size label */}
             <p className="text-xs font-semibold uppercase tracking-widest text-neutral-600 mb-3">{tier.size}</p>
-
-            {/* Name + price */}
             <h3 className="text-2xl font-semibold text-white">{tier.name}</h3>
             <div className="mt-3 flex items-baseline gap-1.5">
               <span className={`text-3xl font-bold ${tier.highlight ? 'text-cyan-200' : 'text-white'}`}>
@@ -402,35 +585,26 @@ const PricingSection: React.FC = () => (
               <span className="text-xs text-neutral-500">/ {tier.period}</span>
             </div>
 
-            {/* Best for */}
-            <p className="mt-4 text-xs font-medium text-neutral-500 leading-5">{tier.best}</p>
+            <p className="mt-4 text-xs text-neutral-500 leading-5">{tier.best}</p>
+            <p className="mt-2 text-sm leading-6 text-neutral-300">{tier.description}</p>
 
-            {/* Description */}
-            <p className="mt-3 text-sm leading-6 text-neutral-300">{tier.description}</p>
-
-            {/* Divider */}
             <div className="my-6 h-px bg-white/[0.07]" />
 
-            {/* Features */}
             <ul className="flex flex-col gap-3 flex-1">
               {tier.features.map(f => (
                 <li key={f} className="flex items-start gap-2.5 text-sm text-neutral-300">
-                  <span className="mt-px shrink-0 text-cyan-400">✓</span>
-                  {f}
+                  <Check />{f}
                 </li>
               ))}
             </ul>
 
-            {/* CTA */}
             <div className="mt-8">
-              <a
-                href="#contact"
-                className={`block rounded-lg px-5 py-3 text-center text-sm font-semibold transition focus:outline-none focus:ring-2 ${
+              <a href="#contact"
+                className={`block rounded-lg px-5 py-3 text-center text-sm font-semibold transition ${
                   tier.highlight
-                    ? 'bg-cyan-200 text-[#071014] hover:bg-white focus:ring-cyan-300/40'
-                    : 'border border-white/[0.12] text-neutral-200 hover:border-cyan-300/25 hover:bg-white/[0.04] focus:ring-cyan-300/20'
-                }`}
-              >
+                    ? 'bg-cyan-200 text-[#071014] hover:bg-white'
+                    : 'border border-white/[0.12] text-neutral-200 hover:border-cyan-300/25 hover:bg-white/[0.04]'
+                }`}>
                 {tier.cta}
               </a>
             </div>
@@ -439,7 +613,7 @@ const PricingSection: React.FC = () => (
       </div>
 
       {/* Disclaimer */}
-      <p className="mt-8 text-sm text-neutral-500 leading-7 max-w-2xl">
+      <p className="mt-8 text-sm leading-7 text-neutral-500 max-w-2xl">
         No two operations are the same. Pricing reflects your workflows — not a template. We scope it quickly and give you a clear number.
       </p>
 
@@ -452,22 +626,21 @@ const PricingSection: React.FC = () => (
             Every tier draws from the same system. What changes is depth, coverage, and ownership.
           </p>
         </div>
-
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
           {SYSTEM_CAPABILITIES.map((cap, i) => (
             <motion.div
               key={cap.group}
-              initial={{ opacity: 0, y: 16 }}
+              initial={{ opacity: 0, y: 14 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: i * 0.07 }}
+              transition={{ duration: 0.38, delay: i * 0.06 }}
               className="rounded-xl border border-white/[0.08] bg-white/[0.02] p-6"
             >
               <p className="text-xs font-semibold uppercase tracking-wider text-cyan-300/70 mb-4">{cap.group}</p>
               <ul className="space-y-2.5">
                 {cap.items.map(item => (
-                  <li key={item} className="flex items-start gap-2 text-sm text-neutral-400 leading-5">
-                    <span className="mt-0.5 shrink-0 text-neutral-600">—</span>
+                  <li key={item} className="flex items-start gap-2 text-sm leading-5 text-neutral-400">
+                    <span className="mt-0.5 shrink-0 text-neutral-700">&#8212;</span>
                     {item}
                   </li>
                 ))}
@@ -486,22 +659,21 @@ const PricingSection: React.FC = () => (
             Not every business needs everything upfront. These are scoped and added when you're ready.
           </p>
         </div>
-
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
           {ADDITIONAL_CAPABILITIES.map((cap, i) => (
             <motion.div
               key={cap.name}
-              initial={{ opacity: 0, y: 16 }}
+              initial={{ opacity: 0, y: 14 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: i * 0.07 }}
+              transition={{ duration: 0.38, delay: i * 0.06 }}
               className="rounded-xl border border-white/[0.06] bg-white/[0.015] p-6"
             >
               <p className="text-sm font-semibold text-neutral-200 mb-4">{cap.name}</p>
               <ul className="space-y-2">
                 {cap.items.map(item => (
-                  <li key={item} className="flex items-start gap-2 text-sm text-neutral-500 leading-5">
-                    <span className="mt-0.5 shrink-0 text-neutral-700">—</span>
+                  <li key={item} className="flex items-start gap-2 text-sm leading-5 text-neutral-500">
+                    <span className="mt-0.5 shrink-0 text-neutral-700">&#8212;</span>
                     {item}
                   </li>
                 ))}
@@ -510,12 +682,9 @@ const PricingSection: React.FC = () => (
           ))}
         </div>
       </div>
-
     </div>
   </SectionReveal>
 );
-
-// ─── DIGITAL PRODUCTS ─────────────────────────────────────────────────────────
 
 const ProductsSection: React.FC = () => (
   <SectionReveal id="products" className="px-5 py-32 sm:py-44 border-t border-white/[0.05]">
@@ -532,10 +701,10 @@ const ProductsSection: React.FC = () => (
         {DIGITAL_PRODUCTS.map((product, i) => (
           <motion.div
             key={product.name}
-            initial={{ opacity: 0, y: 24 }}
+            initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: i * 0.1 }}
+            transition={{ duration: 0.45, delay: i * 0.1 }}
             className={`relative flex flex-col rounded-xl border p-8 ${
               product.highlight
                 ? 'border-cyan-300/35 bg-cyan-300/[0.05] shadow-xl shadow-cyan-500/[0.07]'
@@ -554,38 +723,40 @@ const ProductsSection: React.FC = () => (
             )}
 
             <h3 className="text-xl font-semibold text-white mt-1">{product.name}</h3>
-            <p className="mt-1.5 text-sm text-neutral-400 leading-6">{product.tagline}</p>
+            <p className="mt-1.5 text-sm leading-6 text-neutral-400">{product.tagline}</p>
 
             <div className="mt-5 flex items-end gap-2">
               <span className="text-4xl font-bold text-white">{product.price}</span>
-              {product.anchor && <span className="mb-1 text-xs text-neutral-600 line-through">{product.anchor}</span>}
+              {product.anchor && (
+                <span className="mb-1 text-xs text-neutral-600 line-through">{product.anchor}</span>
+              )}
             </div>
             {product.note && <p className="mt-1.5 text-xs font-medium text-cyan-300/70">{product.note}</p>}
 
             <ul className="mt-6 space-y-2.5">
               {product.features.map(f => (
                 <li key={f} className="flex items-start gap-2.5 text-sm text-neutral-300">
-                  <span className="mt-px shrink-0 text-cyan-400">✓</span>{f}
+                  <Check />{f}
                 </li>
               ))}
             </ul>
 
             <div className="mt-5 rounded-lg border border-white/[0.07] bg-[#0c0c0f]/60 px-4 py-3">
               <p className="text-xs text-neutral-600 mb-1">What's included</p>
-              <p className="text-sm text-neutral-300 leading-6">{product.deliverable}</p>
+              <p className="text-sm leading-6 text-neutral-300">{product.deliverable}</p>
             </div>
 
             <div className="mt-3 rounded-lg border border-white/[0.07] bg-[#0c0c0f]/60 px-4 py-3">
               <p className="text-xs text-neutral-600 mb-1">Built for</p>
-              <p className="text-sm text-neutral-300 leading-6">{product.forWho}</p>
+              <p className="text-sm leading-6 text-neutral-300">{product.forWho}</p>
             </div>
 
             <div className="mt-auto pt-7">
               <a href="#contact"
-                className={`block rounded-lg px-5 py-3 text-center text-sm font-semibold transition focus:outline-none focus:ring-2 ${
+                className={`block rounded-lg px-5 py-3 text-center text-sm font-semibold transition ${
                   product.highlight
-                    ? 'bg-cyan-200 text-[#071014] hover:bg-white focus:ring-cyan-300/40'
-                    : 'border border-white/[0.12] text-neutral-200 hover:border-cyan-300/25 hover:bg-white/[0.04] focus:ring-cyan-300/20'
+                    ? 'bg-cyan-200 text-[#071014] hover:bg-white'
+                    : 'border border-white/[0.12] text-neutral-200 hover:border-cyan-300/25 hover:bg-white/[0.04]'
                 }`}>
                 {product.cta}
               </a>
@@ -604,190 +775,7 @@ const ProductsSection: React.FC = () => (
   </SectionReveal>
 );
 
-// ─── SERVICES SECTION ─────────────────────────────────────────────────────────
-
-const SERVICES_DISPLAY = [
-  {
-    name: 'AI Audit',
-    tagline: "Find what's actually breaking in your workflow.",
-    price: '$500',
-    note: 'Credited toward implementation',
-    features: ['Map your current process', 'Identify errors and bottlenecks', 'Get a clear system plan'],
-    deliverable: 'Workflow review, failure-point diagnosis, recommended fixes, and priority next steps.',
-    result: 'A clear system plan and a first-fix roadmap.',
-    cta: 'Find the break',
-    forWho: 'Teams dealing with manual work, handoff issues, duplicate entry, approval delays, or unclear process ownership.',
-  },
-  {
-    name: 'Cash Flow Clarity',
-    tagline: 'See what cash is coming in, going out, and where the gaps are.',
-    price: 'From $750–$1,500/mo',
-    note: 'Not a report. A working decision system.',
-    features: ['13-week or 90-day cash forecast', 'Weekly review cadence', 'Inflow, outflow, and runway visibility'],
-    deliverable: 'Rolling forecast, weekly review rhythm, inflow/outflow visibility, and runway view.',
-    result: 'A practical plan for the next 30, 60, or 90 days and clearer next decisions.',
-    cta: 'See my cash flow',
-    forWho: 'Owners who need to know whether they can safely hire, spend, pay vendors, or take on new work.',
-  },
-  {
-    name: 'Onshore AP',
-    tagline: 'Dallas-based accounts payable with control, visibility, and human review.',
-    price: 'From $1,500/mo',
-    note: 'No offshore processing. No auto-approvals.',
-    features: ['Invoice intake and validation', 'Human approval workflows', 'Full audit trail'],
-    deliverable: 'Invoice intake, validation, routing, approval coordination, and audit trail management.',
-    result: 'A controlled AP process with visibility, cleaner approvals, and stronger oversight.',
-    cta: 'Explore AP workflow',
-    forWho: 'Businesses that need AP support without losing oversight.',
-  },
-  {
-    name: 'Automation Setup',
-    tagline: 'Turn a broken process into a working system.',
-    price: '$1,500–$3,500',
-    note: null,
-    features: ['Client, vendor, or employee onboarding', 'Intake → rules → approval → routing', 'Built on your existing tools'],
-    deliverable: 'Forms, routing logic, approvals, notifications, and reporting tied to your current stack.',
-    result: 'A working system that reduces manual work and standardizes delivery.',
-    cta: 'Build my system',
-    forWho: 'Businesses with repetitive admin, approvals, onboarding, document intake, or disconnected tools.',
-  },
-  {
-    name: 'AI Use Policy',
-    tagline: 'Set clear rules for how your business uses AI.',
-    price: '$500',
-    note: null,
-    features: ['Define where AI is allowed', 'Set approval and control rules', 'Simple internal policy'],
-    deliverable: 'Allowed-use guidance, review points, and lightweight policy language.',
-    result: 'A usable internal AI policy rather than a bloated compliance document.',
-    cta: 'Set AI rules',
-    forWho: 'Small teams already using AI informally and needing guardrails before usage spreads.',
-  },
-  {
-    name: 'Automated Reporting',
-    tagline: 'Stop building the same reports by hand every week.',
-    price: '$500–$1,500',
-    note: null,
-    features: ['Real-time dashboards', 'Scheduled reports', 'Clear operational insights'],
-    deliverable: 'Dashboard setup, scheduled report flows, and exception/ops reporting.',
-    result: 'Consistent reporting with less manual work and better visibility.',
-    cta: 'Automate reporting',
-    forWho: 'Teams pulling numbers manually from spreadsheets, inboxes, accounting systems, or ops tools.',
-  },
-  {
-    name: 'Compliance + Training',
-    tagline: "Train your team on workflows that don't break under pressure.",
-    price: '$750–$2,000',
-    note: null,
-    features: ['Fraud prevention workflows', 'Approval and verification training', 'Real-world scenarios'],
-    deliverable: 'Workflow-specific training, fraud-prevention scenarios, and control guidance.',
-    result: 'Fewer mistakes, tighter controls, and more consistent execution.',
-    cta: 'Strengthen my controls',
-    forWho: 'Businesses worried about fraud, bad approvals, payment changes, or inconsistent internal controls.',
-  },
-  {
-    name: 'AI Bootcamps',
-    tagline: 'Learn how to actually use AI in your business without breaking things.',
-    price: '$300 (small team) / $750 (1:1)',
-    note: null,
-    features: ['Real business use cases', 'Workflow-first training, not tool demos', 'Safe AI usage and boundaries'],
-    deliverable: 'Live training, workflow examples, use-case guidance, and boundary-setting.',
-    result: 'A safer, more useful AI workflow for your team or practice.',
-    cta: 'Book a session',
-    forWho: 'Small teams or individuals trying to use AI effectively without creating risk or chaos.',
-  },
-  {
-    name: 'Invoice Delta',
-    tagline: 'Find pricing inconsistencies and cost leakage across vendor invoices.',
-    price: 'Custom',
-    note: null,
-    features: ['Vendor pricing comparison', 'Invoice pattern analysis', 'Cost optimization'],
-    deliverable: 'Price comparison review, pattern analysis, and leakage/opportunity findings.',
-    result: 'Clear visibility into pricing drift and where costs can be reduced.',
-    cta: 'Learn more',
-    forWho: 'Companies that suspect vendor drift, pricing inconsistency, or hidden leakage across repeated purchases.',
-  },
-];
-
-const ServicesSection: React.FC = () => {
-  const [expanded, setExpanded] = useState<string | null>(null);
-
-  return (
-    <SectionReveal id="services" className="px-5 py-32 sm:py-44">
-      <div className="mx-auto max-w-7xl">
-        <div className="max-w-3xl mb-16">
-          <Eyebrow>Services</Eyebrow>
-          <h2 className="text-4xl font-semibold leading-tight text-white sm:text-5xl">Make the work visible.</h2>
-          <p className="mt-5 text-sm leading-7 text-neutral-400">Every service starts with the actual problem, not the assumed one.</p>
-        </div>
-
-        <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
-          {SERVICES_DISPLAY.map((service, i) => {
-            const isOpen = expanded === service.name;
-            return (
-              <motion.div
-                key={service.name}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: i * 0.04 }}
-                className={`rounded-xl border transition-colors duration-200 ${isOpen ? 'border-cyan-300/30 bg-cyan-300/[0.04]' : 'border-white/[0.08] bg-white/[0.02] hover:border-white/[0.13]'}`}
-              >
-                <button onClick={() => setExpanded(isOpen ? null : service.name)} className="w-full p-6 text-left">
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="flex-1 min-w-0">
-                      <p className="text-base font-semibold text-white">{service.name}</p>
-                      <p className="mt-1 text-sm text-neutral-400 leading-6">{service.tagline}</p>
-                    </div>
-                    <div className="flex flex-col items-end gap-2 shrink-0">
-                      <span className="text-sm font-semibold text-cyan-200 whitespace-nowrap">{service.price}</span>
-                      <svg className={`h-4 w-4 text-neutral-500 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                        <path d="m6 9 6 6 6-6" strokeLinecap="round" strokeLinejoin="round" />
-                      </svg>
-                    </div>
-                  </div>
-                </button>
-
-                <AnimatePresence initial={false}>
-                  {isOpen && (
-                    <motion.div
-                      initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
-                      className="overflow-hidden"
-                    >
-                      <div className="px-6 pb-6 border-t border-white/[0.07] pt-5 space-y-4">
-                        {service.note && <p className="text-xs font-medium text-cyan-300/70">{service.note}</p>}
-                        <ul className="space-y-2">
-                          {service.features.map(f => (
-                            <li key={f} className="flex items-start gap-2 text-sm text-neutral-300">
-                              <span className="mt-0.5 shrink-0 text-cyan-400">✓</span>{f}
-                            </li>
-                          ))}
-                        </ul>
-                        <div className="rounded-lg bg-[#0c0c0f]/60 border border-white/[0.06] px-4 py-3">
-                          <p className="text-xs text-neutral-600 mb-1">You get</p>
-                          <p className="text-sm text-neutral-300 leading-6">{service.deliverable}</p>
-                        </div>
-                        <div className="rounded-lg bg-[#0c0c0f]/60 border border-white/[0.06] px-4 py-3">
-                          <p className="text-xs text-neutral-600 mb-1">The result</p>
-                          <p className="text-sm text-neutral-300 leading-6">{service.result}</p>
-                        </div>
-                        <a href="#contact" className="inline-flex items-center rounded-lg bg-cyan-200 px-4 py-2.5 text-sm font-semibold text-[#071014] transition hover:bg-white">
-                          {service.cta} →
-                        </a>
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </motion.div>
-            );
-          })}
-        </div>
-      </div>
-    </SectionReveal>
-  );
-};
-
-// ─── MAIN ─────────────────────────────────────────────────────────────────────
+// ─── MAIN APP ─────────────────────────────────────────────────────────────────
 
 const App: React.FC = () => {
   const currentYear = new Date().getFullYear();
@@ -795,7 +783,7 @@ const App: React.FC = () => {
   return (
     <div className="min-h-screen overflow-x-hidden bg-[#0c0c0f] text-neutral-200 selection:bg-cyan-300/20 selection:text-cyan-100">
       <div className="pointer-events-none fixed inset-0 z-0 bg-[linear-gradient(rgba(255,255,255,0.025)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.025)_1px,transparent_1px)] bg-[size:64px_64px]" />
-      <div className="pointer-events-none fixed inset-0 z-0 bg-[radial-gradient(circle_at_20%_10%,rgba(34,211,238,0.12),transparent_28%),radial-gradient(circle_at_82%_18%,rgba(59,130,246,0.08),transparent_26%),radial-gradient(circle_at_55%_90%,rgba(20,184,166,0.06),transparent_30%)]" />
+      <div className="pointer-events-none fixed inset-0 z-0 bg-[radial-gradient(circle_at_20%_10%,rgba(34,211,238,0.11),transparent_28%),radial-gradient(circle_at_82%_18%,rgba(59,130,246,0.07),transparent_26%),radial-gradient(circle_at_55%_90%,rgba(20,184,166,0.06),transparent_30%)]" />
 
       <Nav />
 
@@ -804,24 +792,32 @@ const App: React.FC = () => {
         <section id="hero" className="flex min-h-screen items-center px-5 pb-32 pt-40 sm:pt-48">
           <div className="mx-auto w-full max-w-7xl">
             <div className="max-w-4xl">
-              <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.55, delay: 0.05 }} className="mb-10">
+              <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.05 }} className="mb-10">
                 <HeroSearch />
               </motion.div>
-              <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.75, delay: 0.22 }}
-                className="text-5xl font-semibold leading-none text-white sm:text-6xl lg:text-[5.5rem]">
+              <motion.h1
+                initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.2 }}
+                className="text-5xl font-semibold leading-none text-white sm:text-6xl lg:text-[5.5rem]"
+              >
                 It&apos;s not you.<br className="hidden sm:block" /> It&apos;s your systems.
               </motion.h1>
-              <motion.p initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.65, delay: 0.36 }}
-                className="mt-7 max-w-lg text-base leading-8 text-neutral-400 sm:text-lg">
+              <motion.p
+                initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.34 }}
+                className="mt-7 max-w-lg text-base leading-8 text-neutral-400 sm:text-lg"
+              >
                 Manual steps. Disconnected tools. Money leaks you cannot see.
               </motion.p>
-              <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.48 }}
-                className="mt-10 flex flex-wrap gap-4">
-                <a href="#pricing" className="inline-flex min-h-12 items-center rounded-lg bg-cyan-200 px-6 text-sm font-semibold text-[#071014] transition hover:bg-white focus:outline-none focus:ring-2 focus:ring-cyan-300/40">
+              <motion.div
+                initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.55, delay: 0.46 }}
+                className="mt-10 flex flex-wrap gap-4"
+              >
+                <a href="#pricing"
+                  className="inline-flex min-h-12 items-center rounded-lg bg-cyan-200 px-6 text-sm font-semibold text-[#071014] transition hover:bg-white">
                   See pricing
                 </a>
-                <a href="#products" className="inline-flex min-h-12 items-center rounded-lg border border-white/[0.1] px-6 text-sm font-medium text-neutral-300 transition hover:border-cyan-300/25 hover:text-white focus:outline-none focus:ring-2 focus:ring-cyan-300/20">
-                  Start with a product →
+                <a href="#products"
+                  className="inline-flex min-h-12 items-center rounded-lg border border-white/[0.1] px-6 text-sm font-medium text-neutral-300 transition hover:border-cyan-300/25 hover:text-white">
+                  Start with a product &rarr;
                 </a>
               </motion.div>
             </div>
@@ -875,9 +871,11 @@ const App: React.FC = () => {
         <SectionReveal className="px-5 py-32 sm:py-44">
           <div className="mx-auto grid max-w-7xl gap-12 overflow-hidden rounded-xl border border-white/[0.08] bg-white/[0.02] p-6 md:p-12 lg:grid-cols-[0.95fr_1.05fr] lg:items-center">
             <div className="overflow-hidden rounded-lg">
-              <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1200&q=80"
+              <img
+                src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1200&q=80"
                 alt="Connected city lights representing operational systems"
-                className="h-72 w-full object-cover opacity-70 lg:h-[460px]" />
+                className="h-72 w-full object-cover opacity-70 lg:h-[460px]"
+              />
             </div>
             <div className="pb-4 lg:p-4">
               <Eyebrow>Practical AI for high-stakes admin</Eyebrow>
@@ -909,7 +907,7 @@ const App: React.FC = () => {
               <input id="email" type="email" required placeholder="owner@business.com"
                 className="min-h-14 flex-1 rounded-lg border border-white/[0.08] bg-white/[0.05] px-5 text-white outline-none transition placeholder:text-neutral-500 focus:border-cyan-300/50 focus:ring-2 focus:ring-cyan-300/20" />
               <button type="submit"
-                className="min-h-14 rounded-lg bg-cyan-200 px-7 text-sm font-semibold text-[#071014] transition hover:bg-white focus:outline-none focus:ring-2 focus:ring-cyan-300/40">
+                className="min-h-14 rounded-lg bg-cyan-200 px-7 text-sm font-semibold text-[#071014] transition hover:bg-white">
                 Request a systems review
               </button>
             </form>
