@@ -390,11 +390,8 @@ const PricingSection: React.FC = () => (
               </div>
             )}
 
-            {/* Size label */}
-            <p className="text-xs font-semibold uppercase tracking-widest text-neutral-600 mb-3">{tier.size}</p>
-
             {/* Name + price */}
-            <h3 className="text-2xl font-semibold text-white">{tier.name}</h3>
+            <h3 className="text-2xl font-semibold text-white">{tier.name}</h3
             <div className="mt-3 flex items-baseline gap-1.5">
               <span className={`text-3xl font-bold ${tier.highlight ? 'text-cyan-200' : 'text-white'}`}>
                 {tier.price}
