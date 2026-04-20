@@ -266,7 +266,7 @@ const Check: React.FC = () => (
 
 const Nav: React.FC = () => {
   const [open, setOpen] = useState(false);
-  const links = ['process', 'pricing', 'products', 'contact'];
+  const links = ['pricing', 'products', 'contact'];
 
   return (
     <nav className="fixed left-0 right-0 top-0 z-50 border-b border-white/[0.08] bg-[#0c0c0f]/85 px-5 py-4 backdrop-blur-xl">
@@ -594,21 +594,21 @@ const App: React.FC = () => {
         {/* HERO */}
         <section id="hero" className="relative flex min-h-screen flex-col bg-[#0c0c0f]">
           {/* Top half — pure black, typewriter centered */}
-          <div className="flex flex-1 items-center justify-center px-8 pb-16 pt-36 sm:pt-44">
+          <div className="flex flex-1 items-center justify-center px-6 pb-20 pt-36 sm:px-8 sm:pb-28 sm:pt-44">
             <div className="w-full max-w-4xl">
               <HeroTypewriter />
             </div>
           </div>
 
           {/* Hairline divider */}
-          <div className="mx-8 h-px bg-white/[0.07]" />
+          <div className="mx-6 h-px bg-white/[0.07] sm:mx-8" />
 
           {/* Bottom half — headline + CTAs */}
-          <div className="px-8 pb-24 pt-16 sm:pb-32">
+          <div className="px-6 pb-20 pt-16 sm:px-8 sm:pb-32 sm:pt-24">
             <div className="mx-auto w-full max-w-4xl">
               <motion.h1
                 initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.2 }}
-                className="text-5xl font-semibold leading-none text-white sm:text-6xl lg:text-[5.5rem]"
+                className="text-4xl font-semibold leading-tight text-white sm:text-5xl lg:text-[5.5rem]"
               >
                 It&apos;s not you.<br className="hidden sm:block" /> It&apos;s your systems.
               </motion.h1>
@@ -623,41 +623,50 @@ const App: React.FC = () => {
           </div>
         </section>
 
-        {/* PROCESS */}
-        <SectionReveal id="process" className="border-y border-white/[0.06] bg-white/[0.015] px-5 py-32 sm:py-44">
-          <div className="mx-auto grid max-w-7xl gap-20 lg:grid-cols-[0.85fr_1.15fr] lg:items-start">
-            <div className="lg:sticky lg:top-28">
-              <Eyebrow>How it works</Eyebrow>
-              <h2 className="text-4xl font-semibold leading-tight text-white sm:text-5xl">From messy to reliable.</h2>
-            </div>
-            <div className="space-y-5">
-              {WORKFLOW_STEPS.map((step, i) => (
-                <div key={step.title} className="rounded-xl border border-white/[0.08] bg-[#0d0d10]/80 p-8">
-                  <div className="mb-5 flex items-center gap-4">
-                    <span className="grid h-9 w-9 place-items-center rounded-lg bg-cyan-300/10 text-sm font-semibold text-cyan-200">{i + 1}</span>
-                    <h3 className="text-xl font-semibold text-white">{step.title}</h3>
-                  </div>
-                  <p className="text-sm leading-7 text-neutral-400">{step.copy}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </SectionReveal>
 
-        {/* PRINCIPLES */}
+
+        {/* OPERATOR VALUE PROP */}
         <SectionReveal className="px-5 py-32 sm:py-44">
           <div className="mx-auto max-w-7xl">
             <div className="max-w-3xl mb-16">
-              <Eyebrow>Failure has a workflow</Eyebrow>
-              <h2 className="text-4xl font-semibold leading-tight text-white sm:text-5xl">Good systems know when to stop.</h2>
+              <Eyebrow>Built by operators. For operators.</Eyebrow>
+              <h2 className="text-4xl font-semibold leading-tight text-white sm:text-5xl">
+                You don't need more software.<br className="hidden sm:block" /> You need clarity and control over what you already have.
+              </h2>
+              <p className="mt-6 text-sm leading-7 text-neutral-500 italic">
+                We have processed an invoice or two. We know what breaks.
+              </p>
             </div>
-            <div className="grid gap-6 md:grid-cols-3">
-              {PRINCIPLES.map(p => (
-                <article key={p.action} className="rounded-xl border border-white/[0.08] bg-white/[0.02] p-8">
-                  <p className="text-sm text-neutral-500">{p.rule}</p>
-                  <h3 className="mt-3 text-4xl font-semibold text-cyan-200">{p.action}</h3>
-                  <p className="mt-5 text-sm leading-7 text-neutral-400">{p.copy}</p>
-                </article>
+            <div className="grid gap-6 lg:grid-cols-3">
+              {[
+                {
+                  verb: 'REDUCE',
+                  noun: 'Manual Work',
+                  copy: 'Stop chasing vendors, repeating yourself, and double-checking everything.',
+                },
+                {
+                  verb: 'INCREASE',
+                  noun: 'Capacity',
+                  copy: 'Get more done without adding people or hours.',
+                },
+                {
+                  verb: 'STABILIZE',
+                  noun: 'Cash Flow',
+                  copy: 'Fewer surprises. Fewer mistakes. More predictability.',
+                },
+              ].map((card) => (
+                <motion.article
+                  key={card.verb}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5 }}
+                  className="flex flex-col rounded-xl border border-white/[0.08] bg-white/[0.02] p-8"
+                >
+                  <span className="text-xs font-semibold uppercase tracking-widest text-cyan-300/60 mb-3">{card.verb}</span>
+                  <h3 className="text-2xl font-semibold text-white mb-4">{card.noun}</h3>
+                  <p className="text-base leading-7 text-neutral-400">{card.copy}</p>
+                </motion.article>
               ))}
             </div>
           </div>
@@ -674,7 +683,7 @@ const App: React.FC = () => {
                 Every small business owner is fighting the same three battles. The details are different. The problems are not.
               </p>
             </div>
-            <div className="grid gap-5 md:grid-cols-3">
+            <div className="grid gap-5 lg:grid-cols-3">
               {[
                 {
                   num: '01',
