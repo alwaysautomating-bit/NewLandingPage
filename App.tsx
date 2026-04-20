@@ -17,7 +17,6 @@ const SEARCH_PHRASES = [
 
 const PRICING_TIERS = [
   {
-    size: 'Small',
     name: 'Fix One Workflow',
     price: 'Starting at $497',
     period: 'one-time',
@@ -34,7 +33,6 @@ const PRICING_TIERS = [
     highlight: false,
   },
   {
-    size: 'Medium',
     name: 'Run Your Systems',
     price: 'Starting at $1,497',
     period: 'per month',
@@ -51,7 +49,6 @@ const PRICING_TIERS = [
     highlight: true,
   },
   {
-    size: 'Large',
     name: 'Full Operations Layer',
     price: 'Starting at $3,500',
     period: 'per month',
@@ -364,7 +361,7 @@ const PricingSection: React.FC = () => (
       <div className="grid gap-5 lg:grid-cols-3">
         {PRICING_TIERS.map((tier, i) => (
           <motion.div
-            key={tier.size}
+            key={tier.name}
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -383,7 +380,6 @@ const PricingSection: React.FC = () => (
               </div>
             )}
 
-            <p className="text-xs font-semibold uppercase tracking-widest text-neutral-600 mb-3">{tier.size}</p>
             <h3 className="text-2xl font-semibold text-white">{tier.name}</h3>
             <div className="mt-3 flex items-baseline gap-1.5">
               <span className={`text-3xl font-bold ${tier.highlight ? 'text-cyan-200' : 'text-white'}`}>
@@ -622,19 +618,7 @@ const App: React.FC = () => {
               >
                 Manual steps. Disconnected tools. Money leaks you cannot see.
               </motion.p>
-              <motion.div
-                initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.55, delay: 0.46 }}
-                className="mt-10 flex flex-wrap gap-4"
-              >
-                <a href="#pricing"
-                  className="inline-flex min-h-12 items-center rounded-lg bg-cyan-200 px-6 text-sm font-semibold text-[#071014] transition hover:bg-white">
-                  See pricing
-                </a>
-                <a href="#products"
-                  className="inline-flex min-h-12 items-center rounded-lg border border-white/[0.1] px-6 text-sm font-medium text-neutral-300 transition hover:border-cyan-300/25 hover:text-white">
-                  Start with a product &rarr;
-                </a>
-              </motion.div>
+
             </div>
           </div>
         </section>
@@ -679,25 +663,57 @@ const App: React.FC = () => {
           </div>
         </SectionReveal>
 
-        {/* AI SECTION */}
+        {/* THE BIG THREE */}
         <SectionReveal className="px-5 py-32 sm:py-44">
-          <div className="mx-auto grid max-w-7xl gap-12 overflow-hidden rounded-xl border border-white/[0.08] bg-white/[0.02] p-6 md:p-12 lg:grid-cols-[0.95fr_1.05fr] lg:items-center">
-            <div className="overflow-hidden rounded-lg">
-              <img
-                src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1200&q=80"
-                alt="Connected city lights representing operational systems"
-                className="h-72 w-full object-cover opacity-70 lg:h-[460px]"
-              />
+          <div className="mx-auto max-w-7xl">
+            <div className="max-w-2xl mb-16">
+              <h2 className="text-4xl font-semibold leading-tight text-white sm:text-5xl">
+                The Big Three.
+              </h2>
+              <p className="mt-5 text-base leading-7 text-neutral-400">
+                Every small business owner is fighting the same three battles. The details are different. The problems are not.
+              </p>
             </div>
-            <div className="pb-4 lg:p-4">
-              <Eyebrow>Practical AI for high-stakes admin</Eyebrow>
-              <h2 className="text-4xl font-semibold leading-tight text-white sm:text-5xl">AI where mistakes are expensive.</h2>
-              <p className="mt-6 text-sm leading-8 text-neutral-400">Read. Classify. Compare. Route. Verify.</p>
-              <div className="mt-10 grid gap-3 sm:grid-cols-2">
-                {['Invoices', 'Approvals', 'Receipts', 'Follow-ups'].map(item => (
-                  <div key={item} className="rounded-lg border border-white/[0.08] bg-[#0c0c0f]/70 px-4 py-3 text-sm text-neutral-300">{item}</div>
-                ))}
-              </div>
+            <div className="grid gap-5 md:grid-cols-3">
+              {[
+                {
+                  num: '01',
+                  title: 'Cash Flow',
+                  body: 'Money is coming in. Money is going out. But you never know which one is winning until it\'s too late to do anything about it. The problem isn\'t your revenue — it\'s that your systems can\'t show you where the money actually is right now.',
+                  tension: 'You can\'t make a good decision about what to spend, hire, or commit to when your cash picture is always a few weeks behind.',
+                },
+                {
+                  num: '02',
+                  title: 'Time',
+                  body: 'The repeatable work — approvals, follow-ups, data entry, chasing invoices, checking in on things that should just happen — is eating the hours you\'re supposed to spend running the business. You didn\'t start a company to manage a process.',
+                  tension: 'Manual operations don\'t just slow you down. They create the gaps where mistakes, duplicates, and missed payments live.',
+                },
+                {
+                  num: '03',
+                  title: 'Growth',
+                  body: 'You\'re ready to scale, but the systems underneath won\'t hold. More clients means more chaos. More revenue means more things to track. What got you here starts working against you — because it was never built to grow.',
+                  tension: 'Growth without structure isn\'t growth. It\'s just more of the same problem at a higher volume.',
+                },
+              ].map((card) => (
+                <motion.div
+                  key={card.num}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5 }}
+                  className="flex flex-col rounded-xl border border-white/[0.08] bg-white/[0.02] p-8"
+                >
+                  <div className="flex items-center justify-between mb-8">
+                    <span className="text-sm text-neutral-600 font-mono">{card.num}</span>
+                    <span className="h-1.5 w-1.5 rounded-full bg-cyan-300/50" />
+                  </div>
+                  <h3 className="text-3xl font-semibold text-white mb-5">{card.title}</h3>
+                  <p className="text-sm leading-7 text-neutral-400 flex-1">{card.body}</p>
+                  <div className="mt-6 pt-6 border-t border-white/[0.07]">
+                    <p className="text-sm leading-6 text-neutral-500 italic">{card.tension}</p>
+                  </div>
+                </motion.div>
+              ))}
             </div>
           </div>
         </SectionReveal>
