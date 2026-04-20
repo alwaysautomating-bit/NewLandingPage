@@ -352,9 +352,6 @@ const PricingSection: React.FC = () => (
     <div className="mx-auto max-w-7xl">
       <div className="max-w-2xl mb-16">
         <Eyebrow>Pricing</Eyebrow>
-        <h2 className="text-4xl font-semibold leading-tight text-white sm:text-5xl">
-          Pick the level of fix you need.
-        </h2>
       </div>
 
       {/* Three tiers */}
@@ -420,13 +417,78 @@ const PricingSection: React.FC = () => (
         No two operations are the same. Pricing reflects your workflows — not a template. We scope it quickly and give you a clear number.
       </p>
 
+      {/* WE ALSO HANDLE THE BASICS */}
+      <div className="mt-24 pt-16 border-t border-white/[0.06]">
+        <div className="max-w-xl mb-12">
+          <h3 className="text-3xl font-semibold text-white leading-tight">We also handle the basics.</h3>
+          <p className="mt-4 text-sm text-neutral-400 leading-7">
+            Core services that keep your operations running — and set the foundation for everything else.
+          </p>
+        </div>
+
+        <div className="grid gap-6 lg:grid-cols-3">
+          {[
+            {
+              name: 'Accounts Payable (AP) Services',
+              price: 'From $X / month or $X per invoice',
+              features: ['Invoice intake + routing', 'Vendor tracking', 'Approval workflows', 'Payment coordination'],
+              cta: 'Get AP under control',
+            },
+            {
+              name: 'Bookkeeping',
+              price: 'From $X / month',
+              features: ['Transaction categorization', 'Monthly close', 'Financial reports', 'Cleanup + catch-up'],
+              cta: 'Clean up your books',
+            },
+            {
+              name: 'Business Operations Support',
+              price: 'Custom / scoped',
+              features: ['Workflow setup', 'Tool configuration', 'Process cleanup', 'Automation implementation'],
+              cta: 'Fix your operations',
+            },
+          ].map((svc, i) => (
+            <motion.div
+              key={svc.name}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.45, delay: i * 0.1 }}
+              className="flex flex-col rounded-xl border border-white/[0.08] bg-white/[0.02] p-8"
+            >
+              <h4 className="text-lg font-semibold text-white leading-snug">{svc.name}</h4>
+              <p className="mt-2 text-sm font-medium text-cyan-300/70">{svc.price}</p>
+
+              <div className="my-6 h-px bg-white/[0.07]" />
+
+              <ul className="flex flex-col gap-3 flex-1">
+                {svc.features.map(f => (
+                  <li key={f} className="flex items-start gap-2.5 text-sm text-neutral-300">
+                    <Check />{f}
+                  </li>
+                ))}
+              </ul>
+
+              <a href="#contact"
+                className="mt-8 block rounded-lg border border-white/[0.12] px-5 py-3 text-center text-sm font-semibold text-neutral-200 transition hover:border-cyan-300/25 hover:bg-white/[0.04]">
+                {svc.cta}
+              </a>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Positioning line */}
+        <p className="mt-10 text-sm text-neutral-500 leading-7 max-w-2xl italic">
+          All services are built on the same underlying system — so you don't have to rebuild when you grow.
+        </p>
+      </div>
+
       {/* System capabilities */}
       <div className="mt-24">
         <div className="max-w-xl mb-12">
-          <Eyebrow>What's inside</Eyebrow>
-          <h3 className="text-3xl font-semibold text-white leading-tight">Capabilities by system.</h3>
-          <p className="mt-4 text-sm text-neutral-400 leading-7">
-            Every tier draws from the same system. What changes is depth, coverage, and ownership.
+          <Eyebrow>What this builds</Eyebrow>
+          <h3 className="text-3xl font-semibold text-white leading-tight">Foundation for growth.<br />Built to scale. Not to break.</h3>
+          <p className="mt-5 text-sm text-neutral-400 leading-7">
+            Stable systems at every stage.
           </p>
         </div>
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
@@ -568,12 +630,6 @@ const ProductsSection: React.FC = () => (
         ))}
       </div>
 
-      <p className="mt-10 text-center text-xs text-neutral-600">
-        Purchased a product and want to go deeper?{' '}
-        <a href="#contact" className="text-cyan-400 underline underline-offset-4 hover:text-cyan-200 transition">
-          The cost applies toward any engagement.
-        </a>
-      </p>
     </div>
   </SectionReveal>
 );
@@ -663,8 +719,8 @@ const App: React.FC = () => {
                   transition={{ duration: 0.5 }}
                   className="flex flex-col rounded-xl border border-white/[0.08] bg-white/[0.02] p-8"
                 >
-                  <span className="text-xs font-semibold uppercase tracking-widest text-cyan-300/60 mb-3">{card.verb}</span>
-                  <h3 className="text-2xl font-semibold text-white mb-4">{card.noun}</h3>
+                  <span className="text-xs font-medium uppercase tracking-widest text-neutral-500 mb-3 block">{card.noun}</span>
+                  <h3 className="text-5xl font-bold text-white mb-5 tracking-tight">{card.verb}</h3>
                   <p className="text-base leading-7 text-neutral-400">{card.copy}</p>
                 </motion.article>
               ))}
@@ -754,8 +810,8 @@ const App: React.FC = () => {
 
       <footer className="relative z-10 border-t border-white/[0.05] px-5 py-10">
         <div className="mx-auto flex max-w-7xl flex-col gap-4 text-sm text-neutral-500 sm:flex-row sm:items-center sm:justify-between">
-          <p className="font-medium text-neutral-400">Blue Dot Technology</p>
-          <p>&copy; {currentYear} Blue Dot Technology. Systems over guesswork.</p>
+          <p>&copy; {currentYear} Blue Dot Technology</p>
+          <p>Systems over guesswork.</p>
         </div>
       </footer>
     </div>
