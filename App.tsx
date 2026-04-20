@@ -430,19 +430,19 @@ const PricingSection: React.FC = () => (
           {[
             {
               name: 'Accounts Payable (AP) Services',
-              price: 'From $X / month or $X per invoice',
+              price: 'From $1,500 / month',
               features: ['Invoice intake + routing', 'Vendor tracking', 'Approval workflows', 'Payment coordination'],
               cta: 'Get AP under control',
             },
             {
               name: 'Bookkeeping',
-              price: 'From $X / month',
+              price: 'From $500 / month',
               features: ['Transaction categorization', 'Monthly close', 'Financial reports', 'Cleanup + catch-up'],
               cta: 'Clean up your books',
             },
             {
               name: 'Business Operations Support',
-              price: 'Custom / scoped',
+              price: '$500–$3,000 / based on scope',
               features: ['Workflow setup', 'Tool configuration', 'Process cleanup', 'Automation implementation'],
               cta: 'Fix your operations',
             },
@@ -686,7 +686,7 @@ const App: React.FC = () => {
           <div className="mx-auto max-w-7xl">
             <div className="max-w-3xl mb-16">
               <Eyebrow>Built by operators. For operators.</Eyebrow>
-              <h2 className="text-4xl font-semibold leading-tight text-white sm:text-5xl">
+              <h2 className="text-3xl font-semibold leading-tight text-white sm:text-4xl">
                 You don't need more software.<br className="hidden sm:block" /> You need clarity and control over what you already have.
               </h2>
               <p className="mt-6 text-sm leading-7 text-neutral-500 italic">
@@ -811,7 +811,7 @@ const App: React.FC = () => {
       <footer className="relative z-10 border-t border-white/[0.05] px-5 py-10">
         <div className="mx-auto flex max-w-7xl flex-col gap-4 text-sm text-neutral-500 sm:flex-row sm:items-center sm:justify-between">
           <p>&copy; {currentYear} Blue Dot Technology</p>
-          <p>Systems over guesswork.</p>
+          <p>data &gt; feels</p>
         </div>
       </footer>
     </div>
